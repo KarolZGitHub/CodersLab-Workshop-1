@@ -1,5 +1,6 @@
+package pl.coderslab;
+
 import org.apache.commons.lang3.ArrayUtils;
-import pl.coderslab.ConsoleColors;
 
 import java.io.*;
 import java.util.Scanner;
@@ -43,7 +44,7 @@ public class Main {
               break;
            case "add":
                try {
-                   addiction();
+                   add();
                } catch (FileNotFoundException e) {    // Case when user types "add", adding task.
                    System.out.println("No file.");
                }break;
@@ -57,34 +58,21 @@ public class Main {
         }
        }
     }
-    public static void addiction() throws FileNotFoundException {   //Method adding a task.
+    public static void add() throws FileNotFoundException {   //Method adding a task.
 
         File options = new File("/home/karol/Pulpit/pierwszy/src/tasks.csv");       //Check if file exists
-        Scanner scannerFromConsole = new Scanner(System.in);
         System.out.print("Please enter task name: ");
-        String task = scannerFromConsole.nextLine();                                         // Collecting data from user.
+        String task = scanningFromConsole();                                         // Collecting data from user.
         System.out.print("Please enter a year: ");
-        while (!scannerFromConsole.hasNextInt()){
-            System.out.print("Please enter correct a correct number: ");
-            scannerFromConsole.nextLine();
-        }
-        String year = scannerFromConsole.nextLine();
+        int year = scanningIntFromConsole();
         System.out.print("Please enter a month: ");                                         // Collecting data from user.
-        while (!scannerFromConsole.hasNextInt()){
-            System.out.print("Please enter correct a correct number: ");
-            scannerFromConsole.nextLine();
-        }
-        String month = scannerFromConsole.nextLine();
+        int month = scanningIntFromConsole();
         System.out.print("Please enter a day: ");
-        while (!scannerFromConsole.hasNextInt()){
-            System.out.print("Please enter correct a correct number: ");                    // Collecting data from user.
-            scannerFromConsole.nextLine();
-        }
-        String day = scannerFromConsole.nextLine();
+        int day = scanningIntFromConsole();
         System.out.println("Is this task important ? true/false");
         String important ="";
         while (true){
-            String second = scannerFromConsole.nextLine();
+            String second = scanningFromConsole();
             if (!second.equalsIgnoreCase("true")&&!second.equalsIgnoreCase("false" )){
                 System.out.print("Please enter True or False: ");
             }else if(second.equalsIgnoreCase("true")) {                         // Collecting data from user.
@@ -95,7 +83,6 @@ public class Main {
                 break;
             }
         }
-
         String view = task+ ","+" "+year+"-"+month+"-"+day+","+" "+important;
         System.out.println("Added "+view);
         try (FileWriter fileWriter = new FileWriter(options, true)) {       //Adding task to file.
@@ -122,12 +109,7 @@ public class Main {
         String tasksFromFile = sb.toString();
         String[] taskArray = tasksFromFile.split("\n");
         System.out.print("Select number of task line to delete: ");       // Collecting data from user.
-        Scanner scannerConsole = new Scanner(System.in);
-        while (!scannerConsole.hasNextInt()){
-            System.out.print("Please enter a correct number: ");
-            scannerConsole.nextLine();
-        }
-        int decision = scannerConsole.nextInt();
+        int decision = scanningIntFromConsole();
         String[]arrayWithoutArgument = ArrayUtils.remove(taskArray, decision-1);   // Deleting task chosen by user.
         PrintWriter printWriter = null;
         try {
@@ -143,6 +125,20 @@ public class Main {
         String toFile=transfer.toString();
         printWriter.write(toFile);
         printWriter.close();
+    }
+    public static String scanningFromConsole(){
+        Scanner scanner = new Scanner(System.in);
+        String data = scanner.nextLine();
+        return data;
+    }
+    public static int scanningIntFromConsole(){
+        Scanner scannerFromConsole = new Scanner(System.in);
+        while (!scannerFromConsole.hasNextInt()){
+            System.out.print("Please enter correct a correct number: ");
+            scannerFromConsole.nextLine();
+        }
+        int data = scannerFromConsole.nextInt();
+        return data;
     }
 
 }
